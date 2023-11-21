@@ -7,9 +7,7 @@ import manual_control
 class Main:
     # Initializes the main class
     def __init__(self):
-        rospy.loginfo(
-            "[Main] Initializing ROS Node"
-        )
+        rospy.loginfo("[Main] Initializing ROS Node")
         rospy.init_node('final_project')
         self.goals_list = points.GoalsList()
         self.manual_control = manual_control.ManualControl()

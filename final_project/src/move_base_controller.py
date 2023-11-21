@@ -42,13 +42,11 @@ class MovebaseController:
 
         self.goal.target_pose = target_pose
 
-        rospy.loginfo("[MoveBaseController] Waiting for message")
         rospy.sleep(2)
 
-        rospy.loginfo("[MovebaseController] Sending goal")
+        rospy.loginfo("[MovebaseController] Sending goal to action server")
         self.client.send_goal(self.goal, feedback_cb=self.feedback_callback)
 
-        rospy.loginfo("[MovebaseController] Wait for result")
         wait = self.client.wait_for_result(rospy.Duration(self.duration))
 
         if wait is True:
@@ -72,22 +70,18 @@ class MovebaseController:
         target_pose.pose.orientation.y = 0.0
         target_pose.pose.orientation.z = 0
         target_pose.pose.orientation.w = 1
-
+        
         self.goal.target_pose = target_pose
 
-        rospy.loginfo("[MoveBaseController] Waiting for message")
         rospy.sleep(2)
-
-        rospy.loginfo("[MovebaseController] Sending goal")
+        rospy.loginfo("[MovebaseController] Sending goal to action server")
         self.client.send_goal(self.goal, feedback_cb=self.feedback_callback)
 
-        rospy.loginfo("[MovebaseController] Wait for result")
         wait = self.client.wait_for_result(rospy.Duration(self.duration))
 
         if wait is True:
             rospy.loginfo("[MovebaseController] Action succeeded: Robot reached the goal point")
             return True
-
         else:
             rospy.logwarn("[MovebaseController] Action failed: Robot couldn't reach the goal point")
             return False

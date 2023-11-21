@@ -83,14 +83,8 @@ class ManualControl:
         while self.front is None:
             rospy.sleep(0.1)
 
-        x = 1.4726425599703223
-        y = -0.42066028037912384
-        self.start_point = Goal(x, y, 1, 0, "none")
+        self.start_point = Goal(1.4726425599703223, -0.42066028037912384, 1, 0, "none")
         self.end_point = Goal(point_six.x, point_six.y, 1, 0, "none")
-
-        rospy.loginfo("[ManualControl] Point Start: x={}; y={}".format(self.start_point.x,self.start_point.y))
-        rospy.loginfo("[ManualControl] Point End: x={}; y={}".format(self.end_point.x, self.end_point.y))
-        rospy.loginfo("[ManualControl] -----")
 
         # Move towards starting point for entering the hard zone
         rospy.loginfo("[ManualControl] Move to starting point")
@@ -98,16 +92,18 @@ class ManualControl:
         while status is False:
             status = self.move_base_controller.move_into_hard_zone()
 
-        # Move forward until point six is reached
+        # Turn right until the turtlebot is oriented with the wall opening in front of it
+        rospy.loginfo("[ManualControl] Orienting with wall opening")
         while True:
             if self.check_orientation():
                 self.stop_robot()
                 break
             else:
                 self.turn_right()
-
             self.vel_pub.publish(self.twist)
 
+        # Move forward until the goal six and the hard zone is entered
+        rospy.logdebug("[ManualControl] Moving forward into the hard zone")
         while True:
             if self.position.x < self.end_point.x:
                 self.move_forward()
@@ -115,7 +111,6 @@ class ManualControl:
                 self.stop_robot()
                 self.STATUS = self.IDLE
                 break 
-
             self.vel_pub.publish(self.twist)
 
         rospy.loginfo("[ManualControl] End point is reached. Returning control to Main")

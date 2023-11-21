@@ -17,7 +17,7 @@ class Goal:
         self.zone = zone
 
 class GoalsList:
-    # Initializes the goals list with the empty lists.
+    # Initializes the goals list with the empty lists and reads the yaml-file for the receival of the goals list.
     def __init__(self):
         config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
         self.point_four = None
@@ -55,12 +55,13 @@ class GoalsList:
         except Exception as _:
             goals_yaml = None
             raise Exception("[GoalsList] No tag 'goals' in yaml file found!")
-
+        
+        # The goals array from the yaml is iterated and the valuse are stored in a Goal instance.
         if goals_yaml is not None:
             # Iterate through goals
             for goal_key, goal_value in sorted(goals_yaml.items()):
                 try:
-                    rospy.loginfo("[GoalsList] " + str(goal_value))
+                    rospy.logdebug("[GoalsList] " + str(goal_value))
                     self.add_point(goal_value['x'], goal_value['y'], goal_value['orientation'], goal_value['reward'],
                                    goal_value['zone'])
 
@@ -70,11 +71,7 @@ class GoalsList:
                              with the next point"""
                     )
 
-            self.point_four = deepcopy(self.easy_zone_list[3])
             self.point_six = deepcopy(self.hard_zone_list[0])
-
-            rospy.loginfo("[MAIN] Point 4: x={}; y={}".format(self.point_four.x, self.point_four.y))
-            rospy.loginfo("[MAIN] Point 6: x={}; y={}".format(self.point_six.x, self.point_six.y))
 
         else:
             raise Exception("[GoalsList] Could not open yaml file with goals listed!")
@@ -104,18 +101,20 @@ class GoalsList:
         self.sort_easy_zone_list()
         while len(self.easy_zone_list) > 0:
             status = self.move_base_controller.move_base(self.easy_zone_list[current_goal_index])
+            # The goal was visited by the turtlebot
             if status is True:
                 self.total_reward += self.easy_zone_list[current_goal_index].reward
+                rospy.loginfo("[GoalsList] Goal visited.")
                 rospy.loginfo("[GoalsList] Total reward: {0}".format(str(self.total_reward)))
-                rospy.loginfo("[GoalsList] Remaining goals in easy zone: %s", str(len(self.easy_zone_list) - 1))
                 self.remove_easy_zone_point(current_goal_index)
                 current_goal_index = 0
                 self.sort_easy_zone_list()
+            # The goal or path to the goal was blocked
             else:
+                self.goal_blocked_warning()
                 if current_goal_index < len(self.easy_zone_list) - 1:
                     current_goal_index += 1
         rospy.loginfo("[GoalsList] All easy zone points visited.")
-        rospy.loginfo("[GoalsList] {0}".format(str(len(self.hard_zone_list))))
 
 
     # This function has the task of managing the transfer of the goals of the hard zone list to the move_base_controller
@@ -126,18 +125,20 @@ class GoalsList:
         self.sort_hard_zone_list()
         while len(self.hard_zone_list) > 0:
             status = self.move_base_controller.move_base(self.hard_zone_list[current_goal_index])
+            # The goal was visited by the turtlebot
             if status is True:
                 self.total_reward += self.hard_zone_list[current_goal_index].reward
+                rospy.loginfo("[GoalsList] Goal visited.")
                 rospy.loginfo("[GoalsList] Total reward: {0}".format(str(self.total_reward)))
-                rospy.loginfo("[GoalsList] Remaining goals in hard zone: %s", str(len(self.hard_zone_list) - 1))
                 self.remove_hard_zone_point(current_goal_index)
                 current_goal_index = 0
                 self.sort_hard_zone_list()
+            # The goal or path to the goal was blocked
             else:
+                self.goal_blocked_warning()
                 if current_goal_index < len(self.hard_zone_list) - 1:
                     current_goal_index += 1
         rospy.loginfo("[GoalsList] All hard zone points visited.")
-        rospy.loginfo("[GoalsList] {0}".format(str(len(self.hard_zone_list))))
 
     # Retrieves the sixth point for the manual control of the robot.
     def get_point_six(self):
@@ -154,4 +155,9 @@ class GoalsList:
     # Calculates the distance from the specificed goal to the current position.
     def get_distance_to_current(self, goal):
         return math.sqrt((goal.x - self.current_position.x)**2 + (goal.y - self.current_position.y)**2)
+    
+    # Print the goal blocked warning
+    def goal_blocked_warning(self):
+        rospy.logwarn("[GoalsList] Goal or path to goal was blocked")
+
     
