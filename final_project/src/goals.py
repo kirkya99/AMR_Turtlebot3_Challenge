@@ -139,20 +139,19 @@ class GoalsList:
         rospy.loginfo("[GoalsList] All hard zone points visited.")
         rospy.loginfo("[GoalsList] {0}".format(str(len(self.hard_zone_list))))
 
-    def get_point_four(self):
-        return self.point_four
-    
+    # Retrieves the sixth point for the manual control of the robot.
     def get_point_six(self):
         return self.point_six
     
+    # Sorts the easy point list according to the current robot position.
     def sort_easy_zone_list(self):
         self.easy_zone_list.sort(key=self.get_distance_to_current)
 
+    # Sorts the hard point list according the the current robot position.
     def sort_hard_zone_list(self):
         self.hard_zone_list.sort(key=self.get_distance_to_current)
 
+    # Calculates the distance from the specificed goal to the current position.
     def get_distance_to_current(self, goal):
         return math.sqrt((goal.x - self.current_position.x)**2 + (goal.y - self.current_position.y)**2)
-
-    def calculate_list_length(self, list):
-        return len(list) - 1
+    
