@@ -7,7 +7,7 @@ Let'z face the final project
 # Final project
 The final project is the development of a algorithmn which uses gmapping and move_base to drive to 10 specific points.
 
-[Link to wiki](_sidebar)
+[Link to wiki](Wiki/_sidebar)
 
 # Gettings Started
 
