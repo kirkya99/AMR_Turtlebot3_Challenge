@@ -1,0 +1,62 @@
+topic_name: "/goals"
+goals:
+  0:
+    x: 2.5
+    y: 1
+    z: 0
+    reward: 1
+    zone: 'easy'
+  1:
+    x: -2
+    y: 1
+    z: 0
+    reward: 1
+    zone: 'easy'
+  2:
+    x: 2
+    y: -3
+    z: 0
+    reward: 75
+    zone: 'easy'
+  3:
+    x: -20
+    y: 15
+    z: 0
+    reward: 100
+    zone: 'easy'
+  4:
+    x: -25
+    y: 15
+    z: 0
+    reward: 50
+    zone: 'easy'
+  5:
+    x: -15
+    y: -5
+    z: 0
+    reward: 50
+    zone: 'easy'
+  6:
+    x: -20
+    y: -1
+    z: 0
+    reward: 75
+    zone: 'hard'
+  7:
+    x: 15
+    y: -8
+    z: 0
+    reward: 10
+    zone: 'hard'
+  8:
+    x: 15
+    y: -13
+    z: 0
+    reward: 40
+    zone: 'easy'
+  9:
+    x: 24
+    y: 3
+    z: 0
+    reward: 5
+    zone: 'easy'
