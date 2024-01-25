@@ -1,7 +1,7 @@
 topic_name: "/goals"
 goals:
   0:
-    x: -1.5
+    x: 1.5
     y: 0.0
     orientation: 0
     reward: 100
@@ -13,7 +13,7 @@ goals:
     reward: 75
     zone: 'easy'
   2:
-    x: 1.5
+    x: -1.5
     y: 0.0
     orientation: 0
     reward: 50
