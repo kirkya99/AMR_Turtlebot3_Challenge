@@ -13,6 +13,8 @@ class Main:
 
     def operate_robot(self):
         self.goals_list.read_goals()
+        rospy.loginfo("[Main] ---------------------")
+        self.goals_list.print_goals()
 
 
 if __name__ == "__main__":
