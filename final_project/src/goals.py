@@ -1,24 +1,28 @@
 #! /usr/bin/env python3
 import rospy
 import yaml
+from geometry_msgs.msg import PoseStamped
 
 
 class Goal:
-    def __init__(self, x, y, orientation, score):
+    def __init__(self, x, y, orientation, reward):
         self.x = x
         self.y = y
         self.orientation = orientation
-        self.score = score
+        self.reward = reward
 
 
 class GoalsList:
     def __init__(self):
-        config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
+        # config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
+        # config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
+        config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
+
         rospy.loginfo("Configuration file name: " + str(config_file_name))
         path_to_open = config_file_name
         try:
-            ymlfile = open(path_to_open, "r")
-            self.configFile = yaml.load(ymlfile, yaml.SafeLoader)
+            yaml_file = open(path_to_open, "r")
+            self.configFile = yaml.load(yaml_file, yaml.SafeLoader)
         except Exception as _:
             rospy.logerr("Could not open file " + str(path_to_open) + ".")
             rospy.logerr("Exiting")
@@ -38,7 +42,7 @@ class GoalsList:
             for goal_key, goal_value in sorted(goals_yaml.items()):
                 try:
                     rospy.loginfo(goal_value)
-                    self.add_point(goal_value['x'], goal_value['y'], goal_value['orientation'], goal_value['score'],
+                    self.add_point(goal_value['x'], goal_value['y'], goal_value['orientation'], goal_value['reward'],
                                    goal_value['zone'])
 
                 except Exception as _:
@@ -52,8 +56,8 @@ class GoalsList:
         else:
             raise Exception("Could not open yaml file with goals listed!")
 
-    def add_point(self, x, y, orientation, score, zone):
-        goal_point = Goal(x, y, orientation, score)
+    def add_point(self, x, y, orientation, reward, zone):
+        goal_point = Goal(x, y, orientation, reward)
         if zone == 'easy':
             self.easy_zone_list.append(goal_point)
         elif zone == 'hard':
@@ -61,8 +65,8 @@ class GoalsList:
 
     def sort_points(self):
         try:
-            self.easy_zone_list.sort(key=lambda point: point.score, reverse=True)
-            self.hard_zone_list.sort(key=lambda point: point.score, reverse=True)
+            self.easy_zone_list.sort(key=lambda point: point.reward, reverse=True)
+            self.hard_zone_list.sort(key=lambda point: point.reward, reverse=True)
         except (TypeError, AttributeError) as e:
             rospy.logerr(f"An error occurred while sorting points: {e}")
             raise
@@ -71,3 +75,12 @@ class GoalsList:
             raise
         else:
             self.combined_list = self.easy_zone_list + self.hard_zone_list
+
+    def print_goals(self):
+        for goal in self.combined_list:
+            rospy.loginfo("x: {0}, y: {1}, reward: {2}".format(goal.x, goal.y, goal.reward))
+
+
+    # def retrieve_first(self):
+    #     pose = PoseStamped()
+    #     pose.header.
