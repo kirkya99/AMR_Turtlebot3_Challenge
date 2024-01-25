@@ -18,14 +18,14 @@ class GoalsList:
         # config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
         config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
 
-        rospy.loginfo("Configuration file name: " + str(config_file_name))
+        rospy.loginfo("[Goals] Configuration file name: " + str(config_file_name))
         path_to_open = config_file_name
         try:
             yaml_file = open(path_to_open, "r")
             self.configFile = yaml.load(yaml_file, yaml.SafeLoader)
         except Exception as _:
-            rospy.logerr("Could not open file " + str(path_to_open) + ".")
-            rospy.logerr("Exiting")
+            rospy.logerr("[Goals] Could not open file " + str(path_to_open) + ".")
+            rospy.logerr("[Goals] Exiting")
         self.easy_zone_list = []
         self.hard_zone_list = []
         self.combined_list = []
@@ -35,7 +35,7 @@ class GoalsList:
             goals_yaml = self.configFile["goals"]
         except Exception as _:
             goals_yaml = None
-            raise Exception("No tag 'goals' in yaml file found!")
+            raise Exception("[Goals] No tag 'goals' in yaml file found!")
 
         if goals_yaml is not None:
             # Iterate through goals
@@ -54,7 +54,7 @@ class GoalsList:
             self.sort_points()
 
         else:
-            raise Exception("Could not open yaml file with goals listed!")
+            raise Exception("[Goals] Could not open yaml file with goals listed!")
 
     def add_point(self, x, y, orientation, reward, zone):
         goal_point = Goal(x, y, orientation, reward)
@@ -68,19 +68,20 @@ class GoalsList:
             self.easy_zone_list.sort(key=lambda point: point.reward, reverse=True)
             self.hard_zone_list.sort(key=lambda point: point.reward, reverse=True)
         except (TypeError, AttributeError) as e:
-            rospy.logerr(f"An error occurred while sorting points: {e}")
+            rospy.logerr(f"[Goals] An error occurred while sorting points: {e}")
             raise
         except Exception as e:
-            rospy.logerr(f"An unexpected error occurred while sorting points: {e}")
+            rospy.logerr(f"[Goals] An unexpected error occurred while sorting points: {e}")
             raise
         else:
             self.combined_list = self.easy_zone_list + self.hard_zone_list
 
     def print_goals(self):
         for goal in self.combined_list:
-            rospy.loginfo("x: {0}, y: {1}, reward: {2}".format(goal.x, goal.y, goal.reward))
+            rospy.loginfo("[Goals] x: {0}, y: {1}, reward: {2}".format(goal.x, goal.y, goal.reward))
 
+    def get_easy_zone_list(self):
+        return self.easy_zone_list
 
-    # def retrieve_first(self):
-    #     pose = PoseStamped()
-    #     pose.header.
+    def get_hard_zone_list(self):
+        return self.hard_zone_list
