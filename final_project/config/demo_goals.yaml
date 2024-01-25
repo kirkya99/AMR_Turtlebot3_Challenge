@@ -1,0 +1,26 @@
+topic_name: "/goals"
+goals:
+  0:
+    x: -1.5
+    y: 0.0
+    orientation: 0
+    reward: 100
+    zone: 'easy'
+  1:
+    x: 0.0
+    y: 0.0
+    orientation: 0
+    reward: 75
+    zone: 'easy'
+  2:
+    x: 1.5
+    y: 0.0
+    orientation: 0
+    reward: 50
+    zone: 'easy'
+  3:
+    x: 0.0
+    y: 0.0
+    orientation: 0
+    reward: 25
+    zone: 'easy'
