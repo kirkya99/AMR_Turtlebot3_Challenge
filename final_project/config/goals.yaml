@@ -35,7 +35,7 @@ goals:
     y: -0.5446177300214053
     orientation: 0
     reward: 100
-    zone: 'easy'
+    zone: 'hard'
   6:
     x: 2.1468276838321794
     y: -1.2130468856821415
@@ -53,10 +53,10 @@ goals:
     y: -0.7889084753787474
     orientation: 0
     reward: 150
-    zone: 'easy'
+    zone: 'hard'
   9:
     x: 2.7911272523307975
     y: 0.04123442334677431
     orientation: 0
     reward: 100
-    zone: 'easy'
+    zone: 'hard'
