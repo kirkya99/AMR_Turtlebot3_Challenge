@@ -34,4 +34,3 @@ move base controller:
     - catkin_make
   needs:
     - build
-    - goal
