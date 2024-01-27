@@ -12,7 +12,7 @@ stages:
 build:
   stage: build
   script:
-    - apt-get update && apt-get install -y python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+    - apt-get update && apt-get install -y git python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
     - cd catkin_ws
     - source /opt/ros/noetic/setup.bash
     - catkin_make
@@ -26,5 +26,4 @@ test:
     - rostest fs-213804_tier4 <test_name>.test
 
 before_script:
-  - apt-get install git
   - git clone https://fbe-gitlab.hs-weingarten.de/stud-amr/2023-ws-amr/fs-213804_tier4.git catkin_ws/src/fs-213804_tier4
