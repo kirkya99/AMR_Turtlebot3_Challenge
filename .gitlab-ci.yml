@@ -1,17 +1,18 @@
 # .gitlab-ci.yml
 
-# Specify the image to use for the job
+# Use the official ROS Noetic Docker image
 image: ros:noetic
 
+# Define stages for the CI pipeline
 stages:
   - build
 
+# Define jobs for each stage
 build:
   stage: build
   script:
     - apt-get update && apt-get install -y python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
-    - rosdep init && rosdep update
-    - cd catkin_ws
-    - rosdep install --from-paths src --ignore-src -r -y
+    - cd catkin_ws/src/fs-213804_tier4
+    - rosdep install --from-paths . --ignore-src -r -y
+    - cd ../../
     - catkin_make
-
