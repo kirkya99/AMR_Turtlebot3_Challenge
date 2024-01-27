@@ -1,0 +1,17 @@
+# .gitlab-ci.yml
+
+# Specify the image to use for the job
+image: ros:noetic
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - apt-get update && apt-get install -y python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+    - rosdep init && rosdep update
+    - cd catkin_ws
+    - rosdep install --from-paths src --ignore-src -r -y
+    - catkin_make
+
