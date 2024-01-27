@@ -23,9 +23,14 @@ goals:
     - cd /root/catkin_ws
     - source devel/setup.bash
     - catkin_make
+  needs:
+    - build
 
 move base controller:
   stage: test
   script:
+    - cd /root/catkin_ws
     - source devel/setup.bash
     - catkin_make
+  needs:
+    - build
