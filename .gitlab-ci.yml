@@ -16,3 +16,9 @@ build:
     - cd /root/catkin_ws/src 
     - cp -r $CI_PROJECT_DIR /root/catkin_ws/src/
     - cd /root/catkin_ws && catkin_make
+
+test-goals:
+  stage: test
+
+test-move_base_controller:
+  stage: test
