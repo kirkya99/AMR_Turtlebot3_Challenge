@@ -26,4 +26,5 @@ test:
     - rostest fs-213804_tier4 <test_name>.test
 
 before_script:
+  - apt-get install git
   - git clone https://fbe-gitlab.hs-weingarten.de/stud-amr/2023-ws-amr/fs-213804_tier4.git catkin_ws/src/fs-213804_tier4
