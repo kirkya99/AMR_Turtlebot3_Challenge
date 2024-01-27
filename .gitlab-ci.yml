@@ -1,7 +1,7 @@
 # .gitlab-ci.yml
 
 # Use the official ROS Noetic Docker image
-image: ros:noetic
+image: fbe-dockerreg.rwu.de/doz-iki/amr-vl:noetic-dev
 
 # Define stages for the CI pipeline
 stages:
@@ -13,17 +13,7 @@ build:
   stage: build
   script:
     - apt-get update && apt-get install -y git python3-rosdep python3-rosinstall python3-rosinstall-generator python3-wstool build-essential
+    - git clone https://fbe-gitlab.hs-weingarten.de/stud-amr/2023-ws-amr/fs-213804_tier4.git catkin_ws/src/fs-213804_tier4
     - cd catkin_ws
     - source /opt/ros/noetic/setup.bash
     - catkin_make
-
-test:
-  stage: test
-  script:
-    - cd catkin_ws
-    - source /opt/ros/noetic/setup.bash
-    - source devel/setup.bash
-    - rostest fs-213804_tier4 <test_name>.test
-
-before_script:
-  - git clone https://fbe-gitlab.hs-weingarten.de/stud-amr/2023-ws-amr/fs-213804_tier4.git catkin_ws/src/fs-213804_tier4
