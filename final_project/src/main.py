@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 import rospy
 import goals as points
+import manual_control
 
 
 class Main:
@@ -10,18 +11,15 @@ class Main:
         )
         rospy.init_node('final_project')
         self.goals_list = points.GoalsList()
+        point_six = self.goals_list.get_point_six()
+        self.manual_control = manual_control.ManualControl(point_six)
 
     def operate_robot(self):
         self.goals_list.read_goals()
         rospy.loginfo("[Main] ---------------------")
         self.goals_list.navigating_easy_zone()
-        # TODO: Add follow wall for the passage between the two walls
-        # * navigate to wall left of the opening
-        # * turn parallel to the wall, drive to the opening
-        # * turn to the opening and drive until point 6 has been reached
-        
-        # TODO: Return control to the move_base_controller for the goals in the hard zone
-        # self.goals_list.navigating_hard_zone()
+        self.manual_control.move_into_hard_zone()        
+        self.goals_list.navigating_hard_zone()
 
 
 if __name__ == "__main__":

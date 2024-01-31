@@ -17,6 +17,7 @@ class GoalsList:
         config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
         # config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
         # config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
+        self.point_six = None
 
         rospy.loginfo("[GoalsList] Configuration file name: " + str(config_file_name))
         path_to_open = config_file_name
@@ -68,6 +69,7 @@ class GoalsList:
             self.hard_zone_list.append(goal_point)
 
     def sort_points(self):
+        self.point_six = self.hard_zone_list[0]
         try:
             self.easy_zone_list.sort(key=lambda point: point.reward, reverse=True)
             self.hard_zone_list.sort(key=lambda point: point.reward, reverse=True)
@@ -120,3 +122,6 @@ class GoalsList:
                     current_goal_index += 1     
         rospy.loginfo("[GoalsList] All easy zone points visited.")
         rospy.loginfo("[GoalsList] {0}".format(len(self.hard_zone_list)))
+
+    def get_point_six(self):
+        return self.point_six
