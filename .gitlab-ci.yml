@@ -1,0 +1,36 @@
+# .gitlab-ci.yml
+
+# Use the official ROS Noetic Docker image
+image: fbe-dockerreg.rwu.de/doz-iki/amr-vl:noetic-dev
+
+# Define stages for the CI pipeline
+stages:
+  - build
+  - test
+
+# Define jobs for each stage
+build:
+  stage: build
+  script:
+    - echo $CI_PROJECT_DIR
+    - cd /root/catkin_ws/src 
+    - cp -r $CI_PROJECT_DIR /root/catkin_ws/src/
+    - cd /root/catkin_ws && catkin_make
+
+goals:
+  stage: test
+  script:
+    - cd /root/catkin_ws
+    - source devel/setup.bash
+    - catkin_make
+  needs:
+    - build
+
+move base controller:
+  stage: test
+  script:
+    - cd /root/catkin_ws
+    - source devel/setup.bash
+    - catkin_make
+  needs:
+    - build
