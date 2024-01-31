@@ -14,9 +14,9 @@ class Goal:
 
 class GoalsList:
     def __init__(self):
-        # config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
+        config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
         # config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
-        config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
+        # config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
 
         rospy.loginfo("[GoalsList] Configuration file name: " + str(config_file_name))
         path_to_open = config_file_name
@@ -111,23 +111,12 @@ class GoalsList:
         while len(self.hard_zone_list) > 0:
             status = self.move_base_controller.move_base(self.hard_zone_list[current_goal_index])
             if status is True:
+                self.total_reward += self.hard_zone_list[current_goal_index].reward
+                rospy.loginfo("[GoalsList] Total reward: {0}".format(str(self.total_reward)))
                 self.remove_hard_zone_point(current_goal_index)
                 current_goal_index = 0
             else:
                 if current_goal_index < len(self.easy_zone_list) -1:
-                    current_goal_index += 1
-    def navigating_zone(self, zone):
-        current_goal_index = 0
-        list = []
-        if zone == 'easy':
-            list = self.easy_zone_list
-        else:
-            list = self.hard_zone_list
-        while len(list) > 0:
-            status = self.move_base_controller.move_base(self.list[current_goal_index])
-            if status is True:
-                self.remove_hard_zone_point(current_goal_index)
-                current_goal_index = 0
-            else:
-                if current_goal_index < len(self.easy_zone_list) -1:
-                    current_goal_index += 1
+                    current_goal_index += 1     
+        rospy.loginfo("[GoalsList] All easy zone points visited.")
+        rospy.loginfo("[GoalsList] {0}".format(len(self.hard_zone_list)))
