@@ -11,8 +11,8 @@ class Main:
         )
         rospy.init_node('final_project')
         self.goals_list = points.GoalsList()
-        point_six = self.goals_list.get_point_six()
-        self.manual_control = manual_control.ManualControl(point_six)
+        point_four, point_six = self.goals_list.get_points_for_manual_navigation()
+        self.manual_control = manual_control.ManualControl(point_four, point_six)
 
     def operate_robot(self):
         self.goals_list.read_goals()

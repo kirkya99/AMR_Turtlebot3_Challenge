@@ -7,12 +7,11 @@ from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
 
 
 class ManualControl:
-    def __init__(self, point_position):
+    def __init__(self, point_start, point_end):
         self.infinity = 2.0
         self.move_base_controller = move_base_controller.MovebaseController()
-        self.wall_position = Goal(0.0, 0.0, 1, 0, "none")
-        self.opening_position = Goal(0.0, 0.0, 1, 0, "none")
-        self.point_position = point_position
+        self.spoint_start = point_start
+        self.point_end = point_end
         rospy.Subscriber("/scan", LaserScan, self.laser_scan_callback)
         rospy.Subscriber("/amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
         self.vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
@@ -24,10 +23,11 @@ class ManualControl:
         self.RIGHT="RIGHT"
         self.IDLE = "IDLE"
         self.STATUS = self.FORWARD
+        self.sensor_max_range = 2.0
 
 
     def laser_scan_callback(self, laser_scan):
-        self.min_distance = min(laser_scan)
+        self.min_distance = min(laser_scan.ranges)
         self.front = laser_scan.ranges[0]
         self.left_front = laser_scan.ranges[75]
         self.left = laser_scan.ranges[90]
@@ -51,14 +51,10 @@ class ManualControl:
 
     def amcl_pose_callback(self, msg):
         self.position = msg.pose.pose.position
-        self.orientation = msg.pose.orientation
-        rospy.loginfo("Position: x={}, y={}, z={}".format(self.position.x, self.position.y, self.position.z))
-        rospy.loginfo(
-            "Orientation: x={}, y={}, z={}, w={}".format(self.orientation.x, self.orientation.y, self.orientation.z,
-                                                         self.orientation.w))
+        self.orientation = msg.pose.pose.orientation
 
     def point_reached(self):
-        if self.position.x > self.point_position.x and self.position.y > self.point_position.y:
+        if self.position.x > self.point_end.x and self.position.y > self.point_end.y:
             return True
         else:
             return False
@@ -95,14 +91,14 @@ class ManualControl:
                     self.STATUS = self.FORWARD
             elif self.STATUS == self.FORWARD:
                 self.moveForward()
-                if self.position.y >= self.point_position.y:
+                if self.position.y >= self.point_end.y:
                     self.STATUS = self.LEFT
-                elif self.position.x >= self.point_position.x:
+                elif self.position.x >= self.point_end.x:
                     self.STATUS = self.IDLE
-                elif self.position.y < self.point_position.y:
+                elif self.position.y < self.point_end.y:
                     self.moveForward()
                     self.STATUS = self.FORWARD
-                elif self.position.x < self.point_position.x:
+                elif self.position.x < self.point_end.x:
                     self.STATUS = self.FORWARD
                     self.moveForward()                
             elif self.STATUS == self.LEFT:
@@ -119,12 +115,10 @@ class ManualControl:
     
 
     def move_into_hard_zone_v2(self):
-        self.move_base_controller.move_base(self.position)
+        self.move_base_controller.move_base(self.spoint_start)
 
         while not rospy.is_shutdown() and self.STATUS != self.IDLE:
-            if self.min_distance < 0.25:
-                self.stopRobot()
-            elif self.STATUS == self.RIGHT:
+            if self.STATUS == self.RIGHT:
                 if self.right_front < self.right_aft or self.right_aft == 0 or self.right_front == 0:
                     self.moveRight()
                 else:
@@ -132,10 +126,10 @@ class ManualControl:
                     self.STATUS = self.FORWARD
             elif self.STATUS == self.FORWARD:
                 self.moveForward()
-                if self.position.y >= self.point_position.y:
+                if self.position.y >= self.point_end.y:
                     self.STATUS = self.LEFT
                     self.stopRobot()
-                elif self.position.x >= self.point_position.x:
+                elif self.position.x >= self.point_end.x:
                     self.STATUS = self.IDLE
                     self.stopRobot()
             elif self.STATUS == self.LEFT:
@@ -149,4 +143,6 @@ class ManualControl:
 
         self.stopRobot()
         self.vel_pub.publish(self.twist)
-
+    
+    def calculate_list_length(list):
+        return len(list) - 1

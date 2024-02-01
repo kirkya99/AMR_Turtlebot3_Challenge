@@ -34,8 +34,10 @@ class MovebaseController:
         target_pose.pose.orientation.z = 0.0
         target_pose.pose.orientation.w = 1.0
 
-        rospy.loginfo("MoveBaseController] x: %s; y: %s; reward: %s", str(target_pose.pose.position.x),
-                      str(target_pose.pose.position.y), str(goal.reward))
+        # if hasattr(goal, 'reward'):
+        #     rospy.loginfo("[MoveBaseController] Reward: %s", str(goal.reward))
+        # else:
+        #     rospy.logwarn("[MoveBaseController] 'reward' attribute not found in goal")
 
         self.goal.target_pose = target_pose
 

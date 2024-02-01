@@ -4,6 +4,7 @@ import yaml
 import move_base_controller
 import math
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from copy import deepcopy
 
 
 class Goal:
@@ -19,9 +20,9 @@ class GoalsList:
         config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
         # config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
         # config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
-        self.point_six = None
         self.point_four = None
-        self.current_pos = None
+        self.point_six = None
+        self.current_position = None
 
         rospy.Subscriber("/amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
 
@@ -44,7 +45,7 @@ class GoalsList:
     def amcl_pose_callback(self, msg):
         position = msg.pose.pose.position
         orientation = msg.pose.pose.orientation
-        self.current_pos = Goal(position.x, position.y, orientation.z, 0, "none")
+        self.current_position = Goal(position.x, position.y, orientation.z, 0, "none")
 
     def read_goals(self):
         try:
@@ -67,8 +68,8 @@ class GoalsList:
                              with the next point"""
                     )
 
-            self.point_five = self.easy_zone_list[4]
-            self.point_six = self.hard_zone_list[0]
+            self.point_four = deepcopy(self.easy_zone_list[4])
+            self.point_six = deepcopy(self.hard_zone_list[0])
 
         else:
             raise Exception("[GoalsList] Could not open yaml file with goals listed!")
@@ -94,6 +95,7 @@ class GoalsList:
             if status is True:
                 self.total_reward += self.easy_zone_list[current_goal_index].reward
                 rospy.loginfo("[GoalsList] Total reward: {0}".format(str(self.total_reward)))
+                rospy.loginfo("[GoalsList] Remaining goals in easy zone: %s", str(self.calculate_list_length(self.easy_zone_list)))
                 self.remove_easy_zone_point(current_goal_index)
                 current_goal_index = 0
                 self.sort_easy_zone_list()
@@ -101,7 +103,7 @@ class GoalsList:
                 if current_goal_index < len(self.easy_zone_list) -1:
                     current_goal_index += 1
         rospy.loginfo("[GoalsList] All easy zone points visited.")
-        rospy.loginfo("[GoalsList] {0}".format(len(self.easy_zone_list)))
+        rospy.loginfo("[GoalsList] {0}".format(str(self.calculate_list_length(self.hard_zone_list))))
 
     def navigating_hard_zone(self):
         current_goal_index = 0
@@ -111,6 +113,7 @@ class GoalsList:
             if status is True:
                 self.total_reward += self.hard_zone_list[current_goal_index].reward
                 rospy.loginfo("[GoalsList] Total reward: {0}".format(str(self.total_reward)))
+                rospy.loginfo("[GoalsList] Remaining goals in hard zone: %s", str(len(self.easy_zone_list))-1)
                 self.remove_hard_zone_point(current_goal_index)
                 current_goal_index = 0
                 self.sort_hard_zone_list()
@@ -118,20 +121,9 @@ class GoalsList:
                 if current_goal_index < len(self.easy_zone_list) -1:
                     current_goal_index += 1     
         rospy.loginfo("[GoalsList] All easy zone points visited.")
-        rospy.loginfo("[GoalsList] {0}".format(len(self.hard_zone_list)))
-    def get_point_six(self):
-        return self.point_six
-    
-
-    def get_closest_goal(self):
-        index = 0
-        min_distance = math.inf
-        for goal in len(self.easy_zone_list):
-            current_distance = math.sqrt((self.easy_zone_list[goal].x - self.current_pos.x)**2 + (self.easy_zone_list[goal].y - self.current_pos.y)**2)
-            if(min_distance > current_distance):
-                min_distance = current_distance
-                index = goal
-        return index
+        rospy.loginfo("[GoalsList] {0}".format(self.hard_zone_list))
+    def get_points_for_manual_navigation(self):
+        return self.point_four, self.point_four
     
     def sort_easy_zone_list(self):
         self.easy_zone_list.sort(key=self.get_distance_to_current)
@@ -140,4 +132,7 @@ class GoalsList:
         self.hard_zone_list.sort(key=self.get_distance_to_current)
 
     def get_distance_to_current(self, goal):
-        return math.sqrt((goal.x - self.current_pos.x)**2 + (goal.y - self.current_pos.y)**2)
+        return math.sqrt((goal.x - self.current_position.x)**2 + (goal.y - self.current_position.y)**2)
+
+    def calculate_list_length(self, list):
+        return len(list) - 1
