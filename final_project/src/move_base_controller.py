@@ -15,6 +15,7 @@ class MovebaseController:
         self.client.wait_for_server()
 
         rospy.loginfo("[MoveBaseController] Initializing action goal")
+        self.duration = 30
 
     def feedback_callback(self, feedback):
         rospy.logdebug(feedback)
@@ -45,12 +46,13 @@ class MovebaseController:
         self.client.send_goal(self.goal, feedback_cb=self.feedback_callback)
 
         rospy.loginfo("[MovebaseController] Wait for result")
-        self.client.wait_for_result()
+        wait = self.client.wait_for_result(rospy.Duration(self.duration))
+
 
         result = self.client.get_result()
         if result:
             status = self.client.get_state()
-            if status == actionlib.GoalStatus.SUCCEEDED:
+            if status == actionlib.GoalStatus.SUCCEEDED or wait is True:
                 rospy.loginfo("[MovebaseController] Action succeeded: Robot reached the goal point")
                 # Perform action for successful completion
                 return True

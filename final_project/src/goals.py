@@ -56,7 +56,9 @@ class GoalsList:
                              with the next point"""
                     )
 
-            self.sort_points()
+            # self.sort_points()
+            self.point_five = self.easy_zone_list[4]
+            self.point_six = self.hard_zone_list[0]
 
         else:
             raise Exception("[GoalsList] Could not open yaml file with goals listed!")
@@ -68,24 +70,24 @@ class GoalsList:
         elif zone == 'hard':
             self.hard_zone_list.append(goal_point)
 
-    def sort_points(self):
-        self.point_six = self.hard_zone_list[0]
-        try:
-            self.easy_zone_list.sort(key=lambda point: point.reward, reverse=True)
-            self.hard_zone_list.sort(key=lambda point: point.reward, reverse=True)
-        except (TypeError, AttributeError) as e:
-            rospy.logerr(f"[GoalsList] An error occurred while sorting points: {e}")
-            raise
-        except Exception as e:
-            rospy.logerr(f"[GoalsList] An unexpected error occurred while sorting points: {e}")
-            raise
-        else:
-            self.combined_list = self.easy_zone_list + self.hard_zone_list
+    # def sort_points(self):
+    #     self.point_six = self.hard_zone_list[0]
+    #     try:
+    #         self.easy_zone_list.sort(key=lambda point: point.reward, reverse=True)
+    #         self.hard_zone_list.sort(key=lambda point: point.reward, reverse=True)
+    #     except (TypeError, AttributeError) as e:
+    #         rospy.logerr(f"[GoalsList] An error occurred while sorting points: {e}")
+    #         raise
+    #     except Exception as e:
+    #         rospy.logerr(f"[GoalsList] An unexpected error occurred while sorting points: {e}")
+    #         raise
+    #     else:
+    #         self.combined_list = self.easy_zone_list + self.hard_zone_list
 
-    def print_goals(self):
-        for goal in self.combined_list:
-            rospy.loginfo("P{0} [GoalsList] x: {1}, y: {2}, reward: {3}, zone: {4}"
-                          .format(self.combined_list.index(goal) + 1, goal.x, goal.y, goal.reward, goal.zone))
+    # def print_goals(self):
+    #     for goal in self.combined_list:
+    #         rospy.loginfo("P{0} [GoalsList] x: {1}, y: {2}, reward: {3}, zone: {4}"
+    #                       .format(self.combined_list.index(goal) + 1, goal.x, goal.y, goal.reward, goal.zone))
 
     def remove_easy_zone_point(self, index):
         del self.easy_zone_list[index]
@@ -122,6 +124,9 @@ class GoalsList:
                     current_goal_index += 1     
         rospy.loginfo("[GoalsList] All easy zone points visited.")
         rospy.loginfo("[GoalsList] {0}".format(len(self.hard_zone_list)))
-
     def get_point_six(self):
         return self.point_six
+    
+
+    def get_closest_goal():
+        pass
