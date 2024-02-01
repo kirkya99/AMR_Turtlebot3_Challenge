@@ -14,7 +14,7 @@ class ManualControl:
         self.opening_position = Goal(0.0, 0.0, 1, 0, "none")
         self.point_position = point_position
         rospy.Subscriber("/scan", LaserScan, self.laser_scan_callback)
-        rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
+        rospy.Subscriber("/amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
         self.vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
         self.position = None
         self.orientation = None
