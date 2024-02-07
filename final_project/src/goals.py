@@ -68,8 +68,11 @@ class GoalsList:
                              with the next point"""
                     )
 
-            self.point_four = deepcopy(self.easy_zone_list[4])
+            self.point_four = deepcopy(self.easy_zone_list[3])
             self.point_six = deepcopy(self.hard_zone_list[0])
+
+            rospy.loginfo("[MAIN] Point 4: x={}; y={}".format(self.point_four.x, self.point_four.y))
+            rospy.loginfo("[MAIN] Point 6: x={}; y={}".format(self.point_six.x, self.point_six.y))
 
         else:
             raise Exception("[GoalsList] Could not open yaml file with goals listed!")
@@ -95,15 +98,15 @@ class GoalsList:
             if status is True:
                 self.total_reward += self.easy_zone_list[current_goal_index].reward
                 rospy.loginfo("[GoalsList] Total reward: {0}".format(str(self.total_reward)))
-                rospy.loginfo("[GoalsList] Remaining goals in easy zone: %s", str(self.calculate_list_length(self.easy_zone_list)))
+                rospy.loginfo("[GoalsList] Remaining goals in easy zone: %s", str(len(self.easy_zone_list) - 1))
                 self.remove_easy_zone_point(current_goal_index)
                 current_goal_index = 0
                 self.sort_easy_zone_list()
             else:
-                if current_goal_index < len(self.easy_zone_list) -1:
+                if current_goal_index < len(self.easy_zone_list) - 1:
                     current_goal_index += 1
         rospy.loginfo("[GoalsList] All easy zone points visited.")
-        rospy.loginfo("[GoalsList] {0}".format(str(self.calculate_list_length(self.hard_zone_list))))
+        rospy.loginfo("[GoalsList] {0}".format(str(len(self.hard_zone_list))))
 
     def navigating_hard_zone(self):
         current_goal_index = 0
@@ -113,17 +116,21 @@ class GoalsList:
             if status is True:
                 self.total_reward += self.hard_zone_list[current_goal_index].reward
                 rospy.loginfo("[GoalsList] Total reward: {0}".format(str(self.total_reward)))
-                rospy.loginfo("[GoalsList] Remaining goals in hard zone: %s", str(len(self.easy_zone_list))-1)
+                rospy.loginfo("[GoalsList] Remaining goals in hard zone: %s", str(len(self.hard_zone_list) - 1))
                 self.remove_hard_zone_point(current_goal_index)
                 current_goal_index = 0
                 self.sort_hard_zone_list()
             else:
-                if current_goal_index < len(self.easy_zone_list) -1:
-                    current_goal_index += 1     
-        rospy.loginfo("[GoalsList] All easy zone points visited.")
-        rospy.loginfo("[GoalsList] {0}".format(self.hard_zone_list))
-    def get_points_for_manual_navigation(self):
-        return self.point_four, self.point_four
+                if current_goal_index < len(self.hard_zone_list) - 1:
+                    current_goal_index += 1
+        rospy.loginfo("[GoalsList] All hard zone points visited.")
+        rospy.loginfo("[GoalsList] {0}".format(str(len(self.hard_zone_list))))
+
+    def get_point_four(self):
+        return self.point_four
+    
+    def get_point_six(self):
+        return self.point_six
     
     def sort_easy_zone_list(self):
         self.easy_zone_list.sort(key=self.get_distance_to_current)

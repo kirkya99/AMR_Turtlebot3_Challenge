@@ -11,15 +11,16 @@ class Main:
         )
         rospy.init_node('final_project')
         self.goals_list = points.GoalsList()
-        point_four, point_six = self.goals_list.get_points_for_manual_navigation()
-        self.manual_control = manual_control.ManualControl(point_four, point_six)
+        # rospy.loginfo("[MAIN] Point 4: x={}; y={}", point_four.x, point_four.y)
+        # rospy.loginfo("[MAIN] Point 6: x={}; y={}", point_six.x, point_six.y)
+        self.manual_control = manual_control.ManualControl()
 
     def operate_robot(self):
         self.goals_list.read_goals()
         rospy.loginfo("[Main] ---------------------")
-        self.goals_list.navigating_easy_zone()
-        self.manual_control.move_into_hard_zone()        
-        self.goals_list.navigating_hard_zone()
+        # self.goals_list.navigating_easy_zone()
+        self.manual_control.enter_hard_zone(self.goals_list.get_point_four(), self.goals_list.get_point_six())        
+        # self.goals_list.navigating_hard_zone()
 
 
 if __name__ == "__main__":

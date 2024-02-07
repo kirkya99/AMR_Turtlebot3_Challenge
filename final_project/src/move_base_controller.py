@@ -51,16 +51,16 @@ class MovebaseController:
         wait = self.client.wait_for_result(rospy.Duration(self.duration))
 
 
-        result = self.client.get_result()
-        if result:
-            status = self.client.get_state()
-            if status == actionlib.GoalStatus.SUCCEEDED or wait is True:
-                rospy.loginfo("[MovebaseController] Action succeeded: Robot reached the goal point")
-                # Perform action for successful completion
-                return True
+        # result = self.client.get_result()
+        # if result:
+        # status = self.client.get_state()
+        if wait is True:
+            rospy.loginfo("[MovebaseController] Action succeeded: Robot reached the goal point")
+            # Perform action for successful completion
+            return True
 
-            else:
-                rospy.logwarn("[MovebaseController] Action failed: Robot couldn't reach the goal point")
-                # Perform action for failure to reach the goal
-                return False
-        return True
+        else:
+            rospy.logwarn("[MovebaseController] Action failed: Robot couldn't reach the goal point")
+            # Perform action for failure to reach the goal
+            return False
+        # return True

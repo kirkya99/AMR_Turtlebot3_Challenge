@@ -7,27 +7,22 @@ from geometry_msgs.msg import Twist, PoseWithCovarianceStamped
 
 
 class ManualControl:
-    def __init__(self, point_start, point_end):
+    def __init__(self):
         self.infinity = 2.0
         self.move_base_controller = move_base_controller.MovebaseController()
-        self.spoint_start = point_start
-        self.point_end = point_end
-        rospy.Subscriber("/scan", LaserScan, self.laser_scan_callback)
-        rospy.Subscriber("/amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
         self.vel_pub = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
         self.position = None
         self.orientation = None
         self.twist = Twist()
         self.FORWARD = "FORWARD"
-        self.LEFT="LEFT"
-        self.RIGHT="RIGHT"
         self.IDLE = "IDLE"
         self.STATUS = self.FORWARD
-        self.sensor_max_range = 2.0
+        self.sensor_max_range = self.infinity
 
+        
 
     def laser_scan_callback(self, laser_scan):
-        self.min_distance = min(laser_scan.ranges)
+        # self.min_distance_front = min(laser_scan.ranges[-45:45])
         self.front = laser_scan.ranges[0]
         self.left_front = laser_scan.ranges[75]
         self.left = laser_scan.ranges[90]
@@ -52,97 +47,62 @@ class ManualControl:
     def amcl_pose_callback(self, msg):
         self.position = msg.pose.pose.position
         self.orientation = msg.pose.pose.orientation
+        # rospy.loginfo("[ManualControl] Received AMCL Pose - Position: ({}, {}), Orientation: ({}, {}, {}, {})".format(
+            # self.position.x, self.position.y, self.orientation.x, self.orientation.y, self.orientation.z, self.orientation.w))
 
-    def point_reached(self):
-        if self.position.x > self.point_end.x and self.position.y > self.point_end.y:
-            return True
-        else:
+
+    def move_forward(self):
+        self.twist.linear.x = 0.1
+        self.twist.angular.z = 0.0
+
+    def turn_right(self):
+        self.twist.linear.x = 0.0
+        self.twist.angular.z = 0.1
+
+    def stop_robot(self):
+        self.twist.linear.x = 0.0
+        self.twist.angular.z = 0.0
+
+    def enter_hard_zone(self, point_four, point_six):
+        rospy.Subscriber("/scan", LaserScan, self.laser_scan_callback)
+        rospy.Subscriber("/amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
+
+        rospy.loginfo("[ManualControl] Point 4: x={}; y={}".format(point_four.x,point_four.y))
+        rospy.loginfo("[ManualControl] Point 6: x={}; y={}".format(point_six.x, point_six.y))
+
+        self.start_point = Goal(point_six.y, point_four.x, 1, 0, "none")
+        self.end_point = Goal(point_six.y, point_six.x, 1, 0, "none")
+
+        rospy.loginfo("[ManualControl] Point Start: x={}; y={}".format(self.start_point.x,self.start_point.y))
+        rospy.loginfo("[ManualControl] Point End: x={}; y={}".format(self.end_point.x, self.end_point.y))
+
+        # Move towards starting point for entering the hard zone
+        rospy.loginfo("[ManualControl] Move to starting point")
+        self.move_base_controller.move_base(self.start_point)
+    
+        # Check if orientation is x=0, y=0, z=0, w=1
+        rospy.loginfo("[ManualControl] Turn until the orientation is horizontally aligned")
+        while not rospy.is_shutdown() and self.check_orientation():
+            self.turn_right()
+            self.vel_pub.publish(self.twist)
+
+
+        # Move forward until point six is reached
+        rospy.loginfo("[ManualControl] Move forwad until the end point is reached")
+        while not rospy.is_shutdown() and self.STATUS == self.FORWARD:
+            rospy.logdebug("[ManualControl] position x: {}, current x: {}".format(self.position.y, self.end_point.x))
+            if self.position.y > self.end_point.x:
+                self.move_forward()
+            else:
+                self.stop_robot()
+                self.STATUS = self.IDLE
+
+            self.vel_pub.publish(self.twist)
+
+        rospy.loginfo("[ManualControl] End point is reached. Returning control to Main")
+
+    def check_orientation(self):
+        if round(self.orientation.x) == 0 and round(self.orientation.y == 0) and round(self.orientation.z) == 0 and round(self.orientation.w) == 1:
             return False
-
-
-    def moveForward(self):
-        self.twist.linear.x = 0.2
-        self.twist.angular.z = 0.0
-
-
-    def moveLeft(self):
-        self.twist.linear.x = 0.0
-        self.twist.angular.z = 0.15
-
-    def moveRight(self):
-            self.twist.linear.x = 0.0
-            self.twist.angular.z = -0.15
-
-    def stopRobot(self):
-        self.twist.linear.x = 0.0
-        self.twist.angular.z = 0.0
-
-    def move_into_hard_zone(self):
-        self.move_base_controller.move_base(self.position)
-
-        while not rospy.is_shutdown() and self.STATUS != self.IDLE:
-            if self.min_distance < 0.25:
-                self.stopRobot()
-            elif self.STATUS == self.RIGHT:
-                if self.right_front < self.right_aft or self.right_aft == 0 or self.right_front == 0:
-                    self.moveRight()
-                else:
-                    self.stopRobot()
-                    self.STATUS = self.FORWARD
-            elif self.STATUS == self.FORWARD:
-                self.moveForward()
-                if self.position.y >= self.point_end.y:
-                    self.STATUS = self.LEFT
-                elif self.position.x >= self.point_end.x:
-                    self.STATUS = self.IDLE
-                elif self.position.y < self.point_end.y:
-                    self.moveForward()
-                    self.STATUS = self.FORWARD
-                elif self.position.x < self.point_end.x:
-                    self.STATUS = self.FORWARD
-                    self.moveForward()                
-            elif self.STATUS == self.LEFT:
-                if self.left_front < self.left_aft or self.left_aft == 0 or self.left_front == 0:
-                    self.moveLeft()
-                else:
-                    self.stopRobot()
-                    self.STATUS = self.FORWARD
-            
-            self.vel_pub.publish(self.twist)
-
-        self.stopRobot()
-        self.vel_pub.publish(self.twist)
-    
-
-    def move_into_hard_zone_v2(self):
-        self.move_base_controller.move_base(self.spoint_start)
-
-        while not rospy.is_shutdown() and self.STATUS != self.IDLE:
-            if self.STATUS == self.RIGHT:
-                if self.right_front < self.right_aft or self.right_aft == 0 or self.right_front == 0:
-                    self.moveRight()
-                else:
-                    self.stopRobot()
-                    self.STATUS = self.FORWARD
-            elif self.STATUS == self.FORWARD:
-                self.moveForward()
-                if self.position.y >= self.point_end.y:
-                    self.STATUS = self.LEFT
-                    self.stopRobot()
-                elif self.position.x >= self.point_end.x:
-                    self.STATUS = self.IDLE
-                    self.stopRobot()
-            elif self.STATUS == self.LEFT:
-                if self.left_front < self.left_aft or self.left_aft == 0 or self.left_front == 0:
-                    self.moveLeft()
-                else:
-                    self.stopRobot()
-                    self.STATUS = self.FORWARD
-            
-            self.vel_pub.publish(self.twist)
-
-        self.stopRobot()
-        self.vel_pub.publish(self.twist)
-    
-    def calculate_list_length(list):
-        return len(list) - 1
+        else:
+            return True
