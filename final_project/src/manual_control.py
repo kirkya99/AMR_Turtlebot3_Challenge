@@ -47,17 +47,10 @@ class ManualControl:
     def amcl_pose_callback(self, msg):
         self.position = msg.pose.pose.position
         self.orientation = msg.pose.pose.orientation
-        # rospy.loginfo("[ManualControl] Received AMCL Pose - Position: ({}, {}), Orientation: ({}, {}, {}, {})".format(
-            # self.position.x, self.position.y, self.orientation.x, self.orientation.y, self.orientation.z, self.orientation.w))
-
 
     def move_forward(self):
         self.twist.linear.x = 0.1
         self.twist.angular.z = 0.0
-
-    def turn_right(self):
-        self.twist.linear.x = 0.0
-        self.twist.angular.z = 0.1
 
     def stop_robot(self):
         self.twist.linear.x = 0.0
@@ -67,31 +60,31 @@ class ManualControl:
         rospy.Subscriber("/scan", LaserScan, self.laser_scan_callback)
         rospy.Subscriber("/amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
 
+        rospy.loginfo("[ManualControl] -----")
         rospy.loginfo("[ManualControl] Point 4: x={}; y={}".format(point_four.x,point_four.y))
         rospy.loginfo("[ManualControl] Point 6: x={}; y={}".format(point_six.x, point_six.y))
+        rospy.loginfo("[ManualControl] -----")
 
-        self.start_point = Goal(point_six.y, point_four.x, 1, 0, "none")
-        self.end_point = Goal(point_six.y, point_six.x, 1, 0, "none")
+        self.start_point = Goal(point_six.x, point_four.y, 1, 0, "none")
+        self.end_point = Goal(point_six.x, point_six.y, 1, 0, "none")
 
         rospy.loginfo("[ManualControl] Point Start: x={}; y={}".format(self.start_point.x,self.start_point.y))
         rospy.loginfo("[ManualControl] Point End: x={}; y={}".format(self.end_point.x, self.end_point.y))
+        rospy.loginfo("[ManualControl] -----")
 
         # Move towards starting point for entering the hard zone
         rospy.loginfo("[ManualControl] Move to starting point")
-        self.move_base_controller.move_base(self.start_point)
-    
-        # Check if orientation is x=0, y=0, z=0, w=1
-        rospy.loginfo("[ManualControl] Turn until the orientation is horizontally aligned")
-        while not rospy.is_shutdown() and self.check_orientation():
-            self.turn_right()
-            self.vel_pub.publish(self.twist)
-
+        # self.move_base_controller.move_base(self.start_point)
 
         # Move forward until point six is reached
-        rospy.loginfo("[ManualControl] Move forwad until the end point is reached")
+        rospy.loginfo("[ManualControl] Move forward until the end point is reached")
         while not rospy.is_shutdown() and self.STATUS == self.FORWARD:
-            rospy.logdebug("[ManualControl] position x: {}, current x: {}".format(self.position.y, self.end_point.x))
-            if self.position.y > self.end_point.x:
+            # rospy.loginfo("[ManualControl] position x: {}, end_point x: {}".format(self.position.x, self.end_point.y))
+            if self.front < 0.25:
+                rospy.loginfo("[ManualControl] Waiting for obstacle to clear the path")
+                self.stop_robot()
+            elif self.position.x < self.end_point.y:
+                rospy.loginfo("[ManualControl] position: x: {}, y: {}".format(self.position.x, self.position.y))
                 self.move_forward()
             else:
                 self.stop_robot()
@@ -100,9 +93,3 @@ class ManualControl:
             self.vel_pub.publish(self.twist)
 
         rospy.loginfo("[ManualControl] End point is reached. Returning control to Main")
-
-    def check_orientation(self):
-        if round(self.orientation.x) == 0 and round(self.orientation.y == 0) and round(self.orientation.z) == 0 and round(self.orientation.w) == 1:
-            return False
-        else:
-            return True
