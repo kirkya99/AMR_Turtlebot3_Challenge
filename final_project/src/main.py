@@ -19,7 +19,7 @@ class Main:
         self.goals_list.read_goals()
         rospy.loginfo("[Main] ---------------------")
         self.goals_list.navigating_easy_zone()
-        # self.manual_control.enter_hard_zone(self.goals_list.get_point_four(), self.goals_list.get_point_six())        
+        self.manual_control.enter_hard_zone(self.goals_list.get_point_four(), self.goals_list.get_point_six())        
         self.goals_list.navigating_hard_zone()
 
 
