@@ -17,8 +17,8 @@ class Goal:
 
 class GoalsList:
     def __init__(self):
-        config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
-        # config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
+        # config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
+        config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
         # config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
         self.point_four = None
         self.point_six = None

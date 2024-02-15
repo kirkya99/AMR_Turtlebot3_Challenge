@@ -27,7 +27,6 @@ class ManualControl:
         self.sensor_max_range = self.infinity
 
         
-
     def laser_scan_callback(self, laser_scan):
         # self.min_distance_front = min(laser_scan.ranges[-45:45])
         self.front = laser_scan.ranges[0]
@@ -59,6 +58,10 @@ class ManualControl:
         self.twist.linear.x = 0.1
         self.twist.angular.z = 0.0
 
+    def turn_right(self):
+        self.twist.linear.x = 0.0
+        self.twist.angular.z = -0.25
+
     def stop_robot(self):
         self.twist.linear.x = 0.0
         self.twist.angular.z = 0.0
@@ -89,22 +92,36 @@ class ManualControl:
         rospy.loginfo("[ManualControl] Move to starting point")
         status = False
         while status is False:
-            status = self.move_base_controller.move_base(self.start_point)
+            status = self.move_base_controller.move_into_hard_zone()
 
         # Move forward until point six is reached
         rospy.loginfo("[ManualControl] Move forward until the end point is reached")
-        while not rospy.is_shutdown() and self.STATUS == self.FORWARD:
-            # rospy.loginfo("[ManualControl] position x: {}, end_point x: {}".format(self.position.x, self.end_point.y))
-            if self.front < 0.25:
-                rospy.loginfo("[ManualControl] Waiting for obstacle to clear the path")
+
+        while True:
+            if self.check_orientation():
                 self.stop_robot()
-            elif self.position.x < self.end_point.y:
-                rospy.loginfo("[ManualControl] position: x: {}, y: {}".format(self.position.x, self.position.y))
+                break
+            else:
+                self.turn_right()
+
+            self.vel_pub.publish(self.twist)
+
+        while True:
+            if self.position.x < self.end_point.x:
                 self.move_forward()
             else:
                 self.stop_robot()
                 self.STATUS = self.IDLE
+                break 
 
             self.vel_pub.publish(self.twist)
 
+
         rospy.loginfo("[ManualControl] End point is reached. Returning control to Main")
+
+
+    def check_orientation(self):
+        if self.orientation.w == 1:
+            return True
+        else:
+            return False
