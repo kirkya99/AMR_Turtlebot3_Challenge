@@ -78,7 +78,7 @@ class GoalsList:
             raise Exception("[GoalsList] Could not open yaml file with goals listed!")
 
     def add_point(self, x, y, orientation, reward, zone):
-        goal_point = Goal(y, x, orientation, reward, zone)
+        goal_point = Goal(x, y, orientation, reward, zone)
         if zone == 'easy':
             self.easy_zone_list.append(goal_point)
         elif zone == 'hard':
@@ -92,7 +92,7 @@ class GoalsList:
 
     def navigating_easy_zone(self):
         current_goal_index = 0
-        # self.sort_easy_zone_list()
+        self.sort_easy_zone_list()
         while len(self.easy_zone_list) > 0:
             status = self.move_base_controller.move_base(self.easy_zone_list[current_goal_index])
             if status is True:
@@ -101,7 +101,7 @@ class GoalsList:
                 rospy.loginfo("[GoalsList] Remaining goals in easy zone: %s", str(len(self.easy_zone_list) - 1))
                 self.remove_easy_zone_point(current_goal_index)
                 current_goal_index = 0
-                # self.sort_easy_zone_list()
+                self.sort_easy_zone_list()
             else:
                 if current_goal_index < len(self.easy_zone_list) - 1:
                     current_goal_index += 1
