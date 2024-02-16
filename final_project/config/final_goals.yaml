@@ -1,62 +1,62 @@
 topic_name: "/goals"
 goals:
   0:
-    x: 2.5
-    y: 1
+    x: 0.38858301195065226
+    y: -1.1738110584839845
     orientation: 0
-    reward: 1
+    reward: 20
     zone: 'easy'
   1:
-    x: -2
-    y: 1
+    x: 0.6119052913551752
+    y: -0.0882565489070933
     orientation: 0
-    reward: 1
+    reward: 20
     zone: 'easy'
   2:
-    x: 2
-    y: -3
+    x: 1.6794888103315937
+    y: -0.13244977842034816
     orientation: 0
-    reward: 75
+    reward: 30
     zone: 'easy'
   3:
-    x: -20
-    y: 15
-    orientation: 0
-    reward: 100
-    zone: 'easy'
-  4:
-    x: -25
-    y: 15
-    orientation: 0
-    reward: 50
-    zone: 'easy'
-  5:
-    x: -15
-    y: -5
-    orientation: 0
-    reward: 50
-    zone: 'easy'
-  6:
-    x: -20
-    y: -1
-    orientation: 0
-    reward: 75
-    zone: 'hard'
-  7:
-    x: 15
-    y: -8
-    orientation: 0
-    reward: 10
-    zone: 'hard'
-  8:
-    x: 15
-    y: -13
+    x: 1.4461721551085838
+    y: -0.44067042751668656
     orientation: 0
     reward: 40
     zone: 'easy'
-  9:
-    x: 24
-    y: 3
+  4:
+    x: 1.326832962745436
+    y: -1.1935791743371147
     orientation: 0
-    reward: 5
+    reward: 40
     zone: 'easy'
+  5:
+    x: 1.7974535721026221
+    y: -0.7806526908252946
+    orientation: 0
+    reward: 100
+    zone: 'hard'
+  6:
+    x: 1.9650124573908572
+    y: -1.4824492901354784
+    orientation: 0
+    reward: 120
+    zone: 'hard'
+  7:
+    x: 2.3195927480081884
+    y: -1.7244087055375674
+    orientation: 0
+    reward: 150
+    zone: 'hard'
+  8:
+    x: 2.6142694636792534
+    y: -0.265770988874092 
+    orientation: 0
+    reward: 150
+    zone: 'hard'
+  9:
+    x: 2.9579218732372405
+    y: -1.1459768641964352
+    orientation: 0
+    reward: 100
+    zone: 'hard'

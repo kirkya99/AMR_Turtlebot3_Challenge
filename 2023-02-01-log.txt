@@ -1,0 +1,192 @@
+fabian@fx506-ubuntu:~$ roslaunch final_project start.launch
+... logging to /home/fabian/.ros/log/4a866658-c119-11ee-a2a4-07edef18eff7/roslaunch-fx506-ubuntu-32860.log
+Checking log directory for disk usage. This may take a while.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+
+started roslaunch server http://192.168.10.177:45503/
+
+SUMMARY
+========
+
+PARAMETERS
+ * /final_project/demo_goals_config_file: /home/fabian/catk...
+ * /final_project/final_goals_config_file: /home/fabian/catk...
+ * /final_project/goals_config_file: /home/fabian/catk...
+ * /rosdistro: noetic
+ * /rosversion: 1.16.0
+
+NODES
+  /
+    final_project (final_project/main.py)
+
+ROS_MASTER_URI=http://192.168.10.11:11311
+
+process[final_project-1]: started with pid [32868]
+[INFO] [1706803194.156996]: [GoalsList] Configuration file name: /home/fabian/catkin_ws/src/fs-213804_tier4/final_project/config/goals.yaml
+[INFO] [1706803194.182134]: [MoveBaseController] Initializing action client
+[INFO] [1706803194.583372]: [MoveBaseController] Waiting for action server
+[INFO] [1706803196.365189]: [MoveBaseController] Initializing action goal
+[INFO] [1706803196.383671]: [MoveBaseController] Initializing action client
+[INFO] [1706803196.448261]: [MoveBaseController] Waiting for action server
+[INFO] [1706803196.466534]: [MoveBaseController] Initializing action goal
+[ERROR] [1706803196.555542]: bad callback: <bound method ManualControl.amcl_pose_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 53, in amcl_pose_callback
+    self.orientation = msg.pose.orientation
+AttributeError: 'PoseWithCovariance' object has no attribute 'orientation'
+
+[INFO] [1706803196.601201]: [GoalsList] {'x': 0.4856534920732664, 'y': -1.039952820311725, 'orientation': 0, 'reward': 20, 'zone': 'easy'}
+[INFO] [1706803196.616431]: [GoalsList] {'x': 0.44259240602560307, 'y': 0.03821745430037304, 'orientation': 0, 'reward': 20, 'zone': 'easy'}
+[ERROR] [1706803196.644488]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[INFO] [1706803196.657242]: [GoalsList] {'x': 1.5693273157035545, 'y': 0.13420903903620549, 'orientation': 0, 'reward': 30, 'zone': 'easy'}
+[INFO] [1706803196.715724]: [GoalsList] {'x': 1.4738741463829432, 'y': -0.2193996090095414, 'orientation': 0, 'reward': 40, 'zone': 'easy'}
+[INFO] [1706803196.753907]: [GoalsList] {'x': 1.295846884310592, 'y': -0.9992445002055219, 'orientation': 0, 'reward': 40, 'zone': 'easy'}
+[INFO] [1706803196.776114]: [GoalsList] {'x': 1.8267485403580925, 'y': -0.5446177300214053, 'orientation': 0, 'reward': 100, 'zone': 'hard'}
+[INFO] [1706803196.833704]: [GoalsList] {'x': 2.1468276838321794, 'y': -1.2130468856821415, 'orientation': 0, 'reward': 120, 'zone': 'hard'}
+[ERROR] [1706803196.897382]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[INFO] [1706803196.897690]: [GoalsList] {'x': 2.5833077884920805, 'y': -1.4368898160956065, 'orientation': 0, 'reward': 150, 'zone': 'hard'}
+[INFO] [1706803196.981358]: [GoalsList] {'x': 3.2239742813314285, 'y': -0.7889084753787474, 'orientation': 0, 'reward': 150, 'zone': 'hard'}
+[INFO] [1706803197.054761]: [GoalsList] {'x': 2.7911272523307975, 'y': 0.04123442334677431, 'orientation': 0, 'reward': 100, 'zone': 'hard'}
+[ERROR] [1706803197.055542]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[INFO] [1706803197.089574]: [Main] ---------------------
+[INFO] [1706803197.142530]: [MoveBaseController] Initializing next navigation point
+[INFO] [1706803197.164709]: MoveBaseController] x: 0.44259240602560307; y: 0.03821745430037304; reward: 20
+[INFO] [1706803197.186411]: [MoveBaseController] Waiting for message
+[ERROR] [1706803197.244957]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803197.446501]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803197.649077]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803197.848480]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803198.048532]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803198.247068]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803198.453541]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803198.650609]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803198.850432]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803199.052515]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[INFO] [1706803199.231349]: [MovebaseController] Sending goal
+[ERROR] [1706803199.252121]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[INFO] [1706803199.289116]: [MovebaseController] Wait for result
+^C[final_project-1] killing on exit
+[ERROR] [1706803199.456003]: bad callback: <bound method ManualControl.laser_scan_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 38, in laser_scan_callback
+    if self.left_front > self.infinity or self.left_front > self.sensor_max_range:
+AttributeError: 'ManualControl' object has no attribute 'sensor_max_range'
+
+[ERROR] [1706803200.914040]: bad callback: <bound method ManualControl.amcl_pose_callback of <manual_control.ManualControl object at 0x7fa6f97db880>>
+Traceback (most recent call last):
+  File "/opt/ros/noetic/lib/python3/dist-packages/rospy/topics.py", line 750, in _invoke_callback
+    cb(msg)
+  File "/home/fabian/catkin_ws/src/fs-213804_tier4/final_project/src/manual_control.py", line 53, in amcl_pose_callback
+    self.orientation = msg.pose.orientation
+AttributeError: 'PoseWithCovariance' object has no attribute 'orientation'
+
+[final_project-1] escalating to SIGTERM
+[final_project-1] escalating to SIGKILL
+Shutdown errors:
+ * process[final_project-1, pid 32868]: required SIGKILL. May still be running.
+shutting down processing monitor...
+... shutting down processing monitor complete
+
