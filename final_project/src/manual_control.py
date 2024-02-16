@@ -95,26 +95,28 @@ class ManualControl:
             status = self.move_base_controller.move_into_hard_zone()
 
         # Move forward until point six is reached
-        rospy.loginfo("[ManualControl] Move forward until the end point is reached")
+        # rospy.loginfo("[ManualControl] Move forward until the end point is reached")
 
-        while True:
-            if self.check_orientation():
-                self.stop_robot()
-                break
-            else:
-                self.turn_right()
+        self.move_base_controller.move_base(self.end_point)
 
-            self.vel_pub.publish(self.twist)
+        # while True:
+        #     if self.check_orientation():
+        #         self.stop_robot()
+        #         break
+        #     else:
+        #         self.turn_right()
 
-        while True:
-            if self.position.x < self.end_point.x:
-                self.move_forward()
-            else:
-                self.stop_robot()
-                self.STATUS = self.IDLE
-                break 
+        #     self.vel_pub.publish(self.twist)
 
-            self.vel_pub.publish(self.twist)
+        # while True:
+        #     if self.position.x < self.end_point.x:
+        #         self.move_forward()
+        #     else:
+        #         self.stop_robot()
+        #         self.STATUS = self.IDLE
+        #         break 
+
+        #     self.vel_pub.publish(self.twist)
 
 
         rospy.loginfo("[ManualControl] End point is reached. Returning control to Main")
