@@ -16,8 +16,8 @@ If you want to learn more about how my code works, you can visit my wiki is avai
 
 # Gettings Started
 ## Prerequisites for using my code
-* An map of the target area so that the robot is able to navigate
-* An list of goals with information about the goals in an yaml file. The one goal should have the following information:
+1.  An map of the target area so that the robot is able to navigate
+2. An list of goals with information about the goals in an yaml file. The one goal should have the following information:
   * The x coordinate as an `float`
   * The y coordinate as an `float`
   * The orientation as an `float`
@@ -63,6 +63,16 @@ If you want to learn more about how my code works, you can visit my wiki is avai
   *
   TODO: Move this to the wiki 
 ---
+# Problems and Solutions
+* **The bringup code does not work.**
+  * Is the correct rosmaster ip ~/.bashrc and is it sourced? If not correct the ip and source it by executing `source ~/.bashrc` 
+* **The start of the navigation does not work because the map could not be found**
+  * There are a few reasons for this which should be checked
+    * Does an map with the used name exist?
+    * Is the given path in the command an absolute path?
+* **The robot does not hit the goals correctly:**
+  * This could be because the robot is not correctly localized. Check **step 5 of Getting Started** to correct this.
+  * If the robot is correctly localized, it could be that the goal positions are inaccurate. In this case correct the goal positions by remapping the goals. Check **prerequisite no. 2** for this.
 
-# Authors
+# Author
 * Fabian Schotte, 35604
