@@ -10,6 +10,7 @@ The program has the following tasks:
 1. The robot moves in the easy zone and collects all goals
 2. The robot uses an manual maneuver to drive into the hard zone
 3. The robot moves in the hard zone and collects all goals
+
 If you want to learn more about how my code works, you can visit my wiki is available with this [Link](Wiki/_sidebar).
 
 
