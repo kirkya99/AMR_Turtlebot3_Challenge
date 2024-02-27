@@ -64,13 +64,13 @@ If you want to learn more about how my code works, you can visit my wiki is avai
   TODO: Move this to the wiki 
 ---
 # Problems and Solutions
-## The bringup code does not work.
+### The bringup code does not work.
   * Is the correct rosmaster ip ~/.bashrc and is it sourced? If not correct the ip and source it by executing `source ~/.bashrc` 
-## The start of the navigation does not work because the map could not be found
+### The start of the navigation does not work because the map could not be found
   * There are a few reasons for this which should be checked
     * Does an map with the used name exist?
     * Is the given path in the command an absolute path?
-## The robot does not hit the goals correctly
+### The robot does not hit the goals correctly
   * This could be because the robot is not correctly localized. Check **step 5 of Getting Started** to correct this.
   * If the robot is correctly localized, it could be that the goal positions are inaccurate. In this case correct the goal positions by remapping the goals. Check **prerequisite no. 2** for this.
 
