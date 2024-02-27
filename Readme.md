@@ -6,7 +6,12 @@ Let'z face the final project
 
 # Final project
 The final project is the development of a algorithmn which uses gmapping and move_base to drive to 10 specific points.
-My Wiki is available under this [Link](Wiki/_sidebar).
+The program has the following tasks:
+1. The robot moves in the easy zone and collects all goals
+2. The robot uses an manual maneuver to drive into the hard zone
+3. The robot moves in the hard zone and collects all goals
+If you want to learn more about how my code works, you can visit my wiki is available with this [Link](Wiki/_sidebar).
+
 
 # Gettings Started
 ## Prerequisites for using my code
