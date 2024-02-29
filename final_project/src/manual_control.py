@@ -118,7 +118,6 @@ class ManualControl:
 
             self.vel_pub.publish(self.twist)
 
-
         rospy.loginfo("[ManualControl] End point is reached. Returning control to Main")
 
     # This goal checks if the orientation fits with the sixth goal. If the goal is directly in front of it, the robot will return true and if not
