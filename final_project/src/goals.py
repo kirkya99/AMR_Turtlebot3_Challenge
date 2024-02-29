@@ -8,6 +8,7 @@ from copy import deepcopy
 
 
 class Goal:
+    # Initializes the goal with the relevant information.
     def __init__(self, x, y, orientation, reward, zone):
         self.x = x
         self.y = y
@@ -16,10 +17,9 @@ class Goal:
         self.zone = zone
 
 class GoalsList:
+    # Initializes the goals list with the empty lists.
     def __init__(self):
-        # config_file_name = rospy.get_param("~goals_config_file", "goals.yaml")
         config_file_name = rospy.get_param("~final_goals_config_file", "final_goals.yaml")
-        # config_file_name = rospy.get_param("~demo_goals_config_file", "demo_goals.yaml")
         self.point_four = None
         self.point_six = None
         self.current_position = None
@@ -42,11 +42,13 @@ class GoalsList:
 
         self.total_reward = 0
 
+    # Callback function for the amcl_pose topic.
     def amcl_pose_callback(self, msg):
         position = msg.pose.pose.position
         orientation = msg.pose.pose.orientation
         self.current_position = Goal(position.x, position.y, orientation.z, 0, "none")
 
+    # This function reads the goals from the goals yaml-file and saves them into the lists.
     def read_goals(self):
         try:
             goals_yaml = self.configFile["goals"]
@@ -77,6 +79,8 @@ class GoalsList:
         else:
             raise Exception("[GoalsList] Could not open yaml file with goals listed!")
 
+    # This function receives the goal information and creates an goal which will then be saved 
+    # to the easy or hard zone list depending on the zone of the point. 
     def add_point(self, x, y, orientation, reward, zone):
         goal_point = Goal(x, y, orientation, reward, zone)
         if zone == 'easy':
@@ -84,12 +88,17 @@ class GoalsList:
         elif zone == 'hard':
             self.hard_zone_list.append(goal_point)
 
+    # Removes the given point from the easy zone list.
     def remove_easy_zone_point(self, index):
         del self.easy_zone_list[index]
 
+    # Removes the given point from the hard zone list.
     def remove_hard_zone_point(self, index):
         del self.hard_zone_list[index]
 
+    # This function has the task of managing the transfer of the goals of the easy zone list to the move_base_controller
+    # depending of possible ways of moving the robot. If the path to an goal is blocked, the robot will navigate to the next goal. 
+    # If the path is not blocked, it will always move towards the first point.
     def navigating_easy_zone(self):
         current_goal_index = 0
         self.sort_easy_zone_list()
@@ -108,6 +117,10 @@ class GoalsList:
         rospy.loginfo("[GoalsList] All easy zone points visited.")
         rospy.loginfo("[GoalsList] {0}".format(str(len(self.hard_zone_list))))
 
+
+    # This function has the task of managing the transfer of the goals of the hard zone list to the move_base_controller
+    # depending of possible ways of moving the robot. If the path to an goal is blocked, the robot will navigate to the next goal. 
+    # If the path is not blocked, it will always move towards the first point.
     def navigating_hard_zone(self):
         current_goal_index = 0
         self.sort_hard_zone_list()
@@ -126,20 +139,19 @@ class GoalsList:
         rospy.loginfo("[GoalsList] All hard zone points visited.")
         rospy.loginfo("[GoalsList] {0}".format(str(len(self.hard_zone_list))))
 
-    def get_point_four(self):
-        return self.point_four
-    
+    # Retrieves the sixth point for the manual control of the robot.
     def get_point_six(self):
         return self.point_six
     
+    # Sorts the easy point list according to the current robot position.
     def sort_easy_zone_list(self):
         self.easy_zone_list.sort(key=self.get_distance_to_current)
 
+    # Sorts the hard point list according the the current robot position.
     def sort_hard_zone_list(self):
         self.hard_zone_list.sort(key=self.get_distance_to_current)
 
+    # Calculates the distance from the specificed goal to the current position.
     def get_distance_to_current(self, goal):
         return math.sqrt((goal.x - self.current_position.x)**2 + (goal.y - self.current_position.y)**2)
-
-    def calculate_list_length(self, list):
-        return len(list) - 1
+    
