@@ -24,6 +24,11 @@ If you want to learn more about how my code works, you can visit my wiki is avai
   * The weighting of the goal  as an `int`
   * The zone of the point. This should indicate if it is the `easy`or `hard` zone
 
+There is already an example list with goals given for the final competition on the 16th February 2024. It is saved in the repository under `/fs-213804_tier4/final_project/config/final_goals.yaml`.
+
+The easiest way of making the code runnable with a new robot arena is to use this list and replace the x and y variables with the new variables.
+
+
 ## Steps for the launch of the robot
 1. Change the rosmaster ip on your device to the ip addess of the robot and source the ~/.bashrc
 2. Connect to the robot via ssh e.g. for the robot with the ip 192.168.178.5
@@ -56,7 +61,7 @@ If you want to learn more about how my code works, you can visit my wiki is avai
 
 # Problems and Solutions
 ### The bringup command does not work.
-  * Is the correct rosmaster ip in the ~/.bashrc used and is it sourced? If not correct the ip and source it by executing `source ~/.bashrc` 
+  * Is the correct rosmaster ip in the `~/.bashrc` used and is it sourced? If not, correct the rosmaster ip on your device and source it by executing `source ~/.bashrc` 
 ### The start of the navigation does not work because the map could not be found
   * There are a few reasons for this which should be checked
     * Does an map with the used name exist?
