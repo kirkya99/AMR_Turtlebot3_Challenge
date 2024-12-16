@@ -2,7 +2,7 @@
 
 Let'z face the final project
 
-![]([https://fbe-gitlab.hs-weingarten.de/mat-iki/amr-mat/raw/master/.img/tier_z.png](https://github.com/kirkya99/AMR_Turtlebot3_Challenge/blob/master/tier_z.png))
+![](https://github.com/kirkya99/AMR_Turtlebot3_Challenge/blob/master/tier_z.png)
 
 # Final project
 The final project is the development of a algorithmn which uses gmapping and move_base to drive to 10 specific points.
